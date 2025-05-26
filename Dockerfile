@@ -7,17 +7,20 @@ LABEL org.opencontainers.image.authors="Jakub Kozak <cozzac@example.com>"
 
 RUN apk update \
     && apk add --no-cache --virtual .build-deps \
-       build-base \
-       libffi-dev \
-       openssl-dev \
+         build-base \
+         libffi-dev \
+         openssl-dev \
     && rm -rf /var/cache/apk/*
 
 WORKDIR /app
 
 COPY requirements.txt .
 
-RUN pip install --upgrade pip setuptools \
-    && pip install --prefix=/install -r requirements.txt
+RUN pip install --upgrade pip setuptools wheel
+
+RUN pip install --prefix=/install -r requirements.txt
+
+RUN pip install --prefix=/install 'setuptools>=70.0.0'
 
 # -----------------------
 # Etap 2: Finalny obraz
