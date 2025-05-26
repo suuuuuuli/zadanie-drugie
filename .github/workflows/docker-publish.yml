@@ -41,12 +41,14 @@ jobs:
           tags: scan:${{ github.sha }}
 
       - name: Scan image for CVEs
-        uses: aquasecurity/trivy-action@0.28.0
-        with:
-          image-ref: scan:${{ github.sha }}
-          format: table
-          severity: CRITICAL,HIGH
-          exit-code: '1'
+  uses: aquasecurity/trivy-action@0.28.0
+  with:
+    image-ref: scan:${{ github.sha }}
+    format: table
+    severity: CRITICAL,HIGH
+    exit-code: '1'
+    ignorefile: .trivyignore
+
 
   build-and-push:
     name: Build & Push Multi-Arch (with cache)
