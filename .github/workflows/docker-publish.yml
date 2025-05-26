@@ -1,9 +1,5 @@
 # .github/workflows/docker-publish.yml
 
-env:
-  IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/zadanie-drugie
-  CACHE_IMAGE: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/zadanie-drugie-cache:buildcache
-
 name: Build, Scan & Publish Multi-Arch Docker Image
 
 on:
@@ -11,6 +7,10 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+
+env:
+  IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/zadanie-drugie
+  CACHE_IMAGE: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/zadanie-drugie-cache:buildcache
 
 jobs:
   build-and-scan:
@@ -41,14 +41,13 @@ jobs:
           tags: scan:${{ github.sha }}
 
       - name: Scan image for CVEs
-  uses: aquasecurity/trivy-action@0.28.0
-  with:
-    image-ref: scan:${{ github.sha }}
-    format: table
-    severity: CRITICAL,HIGH
-    exit-code: '1'
-    ignorefile: .trivyignore
-
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: scan:${{ github.sha }}
+          format: table
+          severity: CRITICAL,HIGH
+          exit-code: '1'
+          ignorefile: .trivyignore
 
   build-and-push:
     name: Build & Push Multi-Arch (with cache)
