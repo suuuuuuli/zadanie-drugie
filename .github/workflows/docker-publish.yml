@@ -1,4 +1,3 @@
-```yaml
 # .github/workflows/docker-publish.yml
 
 env:
@@ -18,8 +17,8 @@ jobs:
     name: Build and Push
     runs-on: ubuntu-latest
     permissions:
-      contents: read      # potrzebne do checkout
-      packages: write     # potrzebne do push do GHCR
+      contents: read      # dostęp do kodu
+      packages: write     # uprawnienie do publikowania w GHCR
 
     steps:
       - name: Checkout repository
@@ -58,9 +57,8 @@ jobs:
             ${{ env.IMAGE_NAME }}:latest
             ${{ env.IMAGE_NAME }}:${{ github.sha }}
           cache-from: type=registry,ref=${{ env.CACHE_IMAGE }}
-          cache-to: type=registry,ref=${{ env.CACHE_IMAGE }},mode=max
+          cache-to:   type=registry,ref=${{ env.CACHE_IMAGE }},mode=max
 
       - name: Image digest
         run: |
           echo "Image pushed with digest: $(docker buildx imagetools inspect ${{ env.IMAGE_NAME }}:latest --format '{{ .Digest }}')"
-```
