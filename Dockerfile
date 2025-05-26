@@ -15,7 +15,8 @@ RUN apk update \
 WORKDIR /app
 
 COPY requirements.txt .
-RUN pip install --upgrade pip \
+
+RUN pip install --upgrade pip setuptools \
     && pip install --prefix=/install -r requirements.txt
 
 # -----------------------
